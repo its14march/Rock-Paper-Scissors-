@@ -1,19 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rock Paper Scissors</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .game {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        text-align: center;
+        width: 350px;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    .choices button {
+        padding: 12px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        background: #3498db;
+        color: white;
+        transition: 0.2s;
+    }
+
+    .choices button:hover {
+        background: #2980b9;
+    }
+
+    .result {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
+    .winner {
+        color: green;
+        font-weight: bold;
+    }
+
+    .loser {
+        color: red;
+        font-weight: bold;
+    }
+
+    .tie {
+        color: orange;
+        font-weight: bold;
+    }
+</style>
+</head>
+
 <body>
 
-<h2>Rock Paper Scissors Game</h2>
-<button onclick="playGame()">Play Game</button>
+<div class="game">
+    <h2>Rock Paper Scissors</h2>
+
+    <div class="choices">
+        <button onclick="playGame('rock')">🪨 Rock</button>
+        <button onclick="playGame('paper')">📄 Paper</button>
+        <button onclick="playGame('scissors')">✂️ Scissors</button>
+    </div>
+
+    <div class="result">
+        <p id="userChoice"></p>
+        <p id="computerChoice"></p>
+        <p id="result"></p>
+    </div>
+</div>
 
 <script>
-function playGame() {
+function playGame(userChoice) {
 
-    var userChoice = prompt("Do you choose rock, paper, or scissors?");
-    userChoice = userChoice.toLowerCase();
-
-    // 2. Computer makes a choice
-    850220
     var computerChoice = Math.random();
+
     if (computerChoice < 0.34) {
         computerChoice = "rock";
     } else if (computerChoice <= 0.67) {
@@ -22,35 +98,49 @@ function playGame() {
         computerChoice = "scissors";
     }
 
-    // 3. Define the logic to determine the winner
     var result = "";
-    
+    var resultClass = "";
+
     if (userChoice === computerChoice) {
         result = "The result is a tie!";
-    } else if (userChoice === "rock") {
+        resultClass = "tie";
+    }
+    else if (userChoice === "rock") {
         if (computerChoice === "scissors") {
             result = "You win! Rock beats Scissors.";
+            resultClass = "winner";
         } else {
             result = "You lose! Paper beats Rock.";
+            resultClass = "loser";
         }
-    } else if (userChoice === "paper") {
+    }
+    else if (userChoice === "paper") {
         if (computerChoice === "rock") {
             result = "You win! Paper beats Rock.";
+            resultClass = "winner";
         } else {
             result = "You lose! Scissors beats Paper.";
+            resultClass = "loser";
         }
-    } else if (userChoice === "scissors") {
+    }
+    else if (userChoice === "scissors") {
         if (computerChoice === "rock") {
             result = "You lose! Rock beats Scissors.";
+            resultClass = "loser";
         } else {
             result = "You win! Scissors beats Paper.";
+            resultClass = "winner";
         }
-    } else {
-        result = "Invalid input! Please choose rock, paper, or scissors.";
     }
 
-    // 4. Show the result
-    alert("Computer chose: " + computerChoice + "\n" + result);
+    document.getElementById("userChoice").innerText =
+        "Your Choice: " + userChoice;
+
+    document.getElementById("computerChoice").innerText =
+        "Computer Choice: " + computerChoice;
+
+    document.getElementById("result").innerText = result;
+    document.getElementById("result").className = resultClass;
 }
 </script>
 
