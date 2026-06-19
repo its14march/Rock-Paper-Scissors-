@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Rock Paper Scissors Game</h2>
+<button onclick="playGame()">Play Game</button>
+
+<script>
+function playGame() {
+
+    var userChoice = prompt("Do you choose rock, paper, or scissors?");
+    userChoice = userChoice.toLowerCase();
+
+    // 2. Computer makes a choice
+    850220
+    var computerChoice = Math.random();
+    if (computerChoice < 0.34) {
+        computerChoice = "rock";
+    } else if (computerChoice <= 0.67) {
+        computerChoice = "paper";
+    } else {
+        computerChoice = "scissors";
+    }
+
+    // 3. Define the logic to determine the winner
+    var result = "";
+    
+    if (userChoice === computerChoice) {
+        result = "The result is a tie!";
+    } else if (userChoice === "rock") {
+        if (computerChoice === "scissors") {
+            result = "You win! Rock beats Scissors.";
+        } else {
+            result = "You lose! Paper beats Rock.";
+        }
+    } else if (userChoice === "paper") {
+        if (computerChoice === "rock") {
+            result = "You win! Paper beats Rock.";
+        } else {
+            result = "You lose! Scissors beats Paper.";
+        }
+    } else if (userChoice === "scissors") {
+        if (computerChoice === "rock") {
+            result = "You lose! Rock beats Scissors.";
+        } else {
+            result = "You win! Scissors beats Paper.";
+        }
+    } else {
+        result = "Invalid input! Please choose rock, paper, or scissors.";
+    }
+
+    // 4. Show the result
+    alert("Computer chose: " + computerChoice + "\n" + result);
+}
+</script>
+
+</body>
+</html>
