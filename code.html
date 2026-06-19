@@ -4,144 +4,367 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rock Paper Scissors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
+        padding: 20px;
     }
 
     .game {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 28px;
+        padding: 40px 36px;
+        width: 100%;
+        max-width: 480px;
         text-align: center;
-        width: 350px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.4);
     }
 
-    h2 {
-        margin-bottom: 20px;
+    /* ── Title ── */
+    .title {
+        color: #fff;
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+    .subtitle {
+        color: rgba(255,255,255,0.45);
+        font-size: 0.85rem;
+        margin-bottom: 32px;
     }
 
-    .choices button {
-        padding: 12px 20px;
-        margin: 5px;
-        font-size: 16px;
+    /* ── Scoreboard ── */
+    .scoreboard {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 34px;
+    }
+    .score-box {
+        flex: 1;
+        background: rgba(255,255,255,0.07);
+        border-radius: 16px;
+        padding: 14px 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .score-box .label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .score-box .num {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+    .score-box.wins   { border-color: rgba(72,199,142,0.4); }
+    .score-box.wins   .label { color: #48c78e; }
+    .score-box.wins   .num   { color: #48c78e; }
+    .score-box.losses { border-color: rgba(241,70,104,0.4); }
+    .score-box.losses .label { color: #f14668; }
+    .score-box.losses .num   { color: #f14668; }
+    .score-box.ties   { border-color: rgba(255,183,77,0.4); }
+    .score-box.ties   .label { color: #ffb74d; }
+    .score-box.ties   .num   { color: #ffb74d; }
+
+    /* ── Choices ── */
+    .choices-label {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    .choices {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 34px;
+    }
+    .choice-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 20px 10px;
+        border: 2px solid rgba(255,255,255,0.12);
+        border-radius: 20px;
+        background: rgba(255,255,255,0.06);
+        color: #fff;
         cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        font-family: 'Poppins', sans-serif;
+    }
+    .choice-btn .icon { font-size: 2.4rem; line-height: 1; }
+    .choice-btn .name { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px; color: rgba(255,255,255,0.75); }
+
+    .choice-btn.rock:hover   { border-color: #e74c3c; background: rgba(231,76,60,0.18); box-shadow: 0 0 22px rgba(231,76,60,0.35); transform: translateY(-5px); }
+    .choice-btn.paper:hover  { border-color: #3498db; background: rgba(52,152,219,0.18); box-shadow: 0 0 22px rgba(52,152,219,0.35); transform: translateY(-5px); }
+    .choice-btn.scissors:hover { border-color: #9b59b6; background: rgba(155,89,182,0.18); box-shadow: 0 0 22px rgba(155,89,182,0.35); transform: translateY(-5px); }
+
+    .choice-btn.selected { transform: translateY(-5px) scale(1.04); }
+    .choice-btn.selected.rock     { border-color: #e74c3c; background: rgba(231,76,60,0.25); box-shadow: 0 0 28px rgba(231,76,60,0.5); }
+    .choice-btn.selected.paper    { border-color: #3498db; background: rgba(52,152,219,0.25); box-shadow: 0 0 28px rgba(52,152,219,0.5); }
+    .choice-btn.selected.scissors { border-color: #9b59b6; background: rgba(155,89,182,0.25); box-shadow: 0 0 28px rgba(155,89,182,0.5); }
+
+    /* ── VS Arena ── */
+    .arena {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 20px;
+        padding: 22px 16px;
+        margin-bottom: 26px;
+        border: 1px solid rgba(255,255,255,0.08);
+        animation: fadeUp 0.35s ease;
+    }
+    .arena.visible { display: flex; }
+
+    .arena-side { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .arena-side .side-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .arena-side .side-icon  { font-size: 3rem; line-height: 1; }
+    .arena-side .side-name  { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: capitalize; }
+
+    .vs-badge {
+        font-size: 1rem;
+        font-weight: 800;
+        color: rgba(255,255,255,0.3);
+        padding: 6px 12px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        letter-spacing: 1px;
+    }
+
+    /* ── Result banner ── */
+    .result-banner {
+        display: none;
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin-bottom: 22px;
+        animation: pop 0.3s ease;
+    }
+    .result-banner.visible { display: block; }
+    .result-banner .result-text { font-size: 1.25rem; font-weight: 700; }
+    .result-banner .result-detail { font-size: 0.82rem; margin-top: 4px; opacity: 0.85; }
+
+    .result-banner.winner { background: rgba(72,199,142,0.15); border: 1px solid rgba(72,199,142,0.4); color: #48c78e; }
+    .result-banner.loser  { background: rgba(241,70,104,0.15); border: 1px solid rgba(241,70,104,0.4); color: #f14668; }
+    .result-banner.tie    { background: rgba(255,183,77,0.15); border: 1px solid rgba(255,183,77,0.4); color: #ffb74d; }
+
+    /* ── Reset button ── */
+    .reset-btn {
+        display: none;
+        margin: 0 auto;
+        padding: 13px 32px;
         border: none;
-        border-radius: 8px;
-        background: #3498db;
-        color: white;
-        transition: 0.2s;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+        transition: opacity 0.2s, transform 0.2s;
+        box-shadow: 0 8px 20px rgba(102,126,234,0.35);
     }
+    .reset-btn.visible { display: inline-block; }
+    .reset-btn:hover { opacity: 0.88; transform: translateY(-2px); }
 
-    .choices button:hover {
-        background: #2980b9;
+    /* ── Animations ── */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
-
-    .result {
-        margin-top: 20px;
-        font-size: 18px;
-    }
-
-    .winner {
-        color: green;
-        font-weight: bold;
-    }
-
-    .loser {
-        color: red;
-        font-weight: bold;
-    }
-
-    .tie {
-        color: orange;
-        font-weight: bold;
+    @keyframes pop {
+        0%   { transform: scale(0.85); opacity: 0; }
+        70%  { transform: scale(1.04); }
+        100% { transform: scale(1);    opacity: 1; }
     }
 </style>
 </head>
 
 <body>
-
 <div class="game">
-    <h2>Rock Paper Scissors</h2>
 
+    <h1 class="title">✊ Rock Paper Scissors</h1>
+    <p class="subtitle">Pick your weapon and challenge the computer</p>
+
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+        <div class="score-box wins">
+            <div class="label">Wins</div>
+            <div class="num" id="scoreWins">0</div>
+        </div>
+        <div class="score-box ties">
+            <div class="label">Ties</div>
+            <div class="num" id="scoreTies">0</div>
+        </div>
+        <div class="score-box losses">
+            <div class="label">Losses</div>
+            <div class="num" id="scoreLosses">0</div>
+        </div>
+    </div>
+
+    <!-- Choice buttons -->
+    <p class="choices-label">Choose your move</p>
     <div class="choices">
-        <button onclick="playGame('rock')">🪨 Rock</button>
-        <button onclick="playGame('paper')">📄 Paper</button>
-        <button onclick="playGame('scissors')">✂️ Scissors</button>
+        <button class="choice-btn rock"     onclick="playGame('rock')"    >
+            <span class="icon">🪨</span><span class="name">Rock</span>
+        </button>
+        <button class="choice-btn paper"    onclick="playGame('paper')"   >
+            <span class="icon">📄</span><span class="name">Paper</span>
+        </button>
+        <button class="choice-btn scissors" onclick="playGame('scissors')">
+            <span class="icon">✂️</span><span class="name">Scissors</span>
+        </button>
     </div>
 
-    <div class="result">
-        <p id="userChoice"></p>
-        <p id="computerChoice"></p>
-        <p id="result"></p>
+    <!-- VS Arena -->
+    <div class="arena" id="arena">
+        <div class="arena-side">
+            <div class="side-label">You</div>
+            <div class="side-icon" id="userIcon"></div>
+            <div class="side-name" id="userChoiceDisplay"></div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="arena-side">
+            <div class="side-label">Computer</div>
+            <div class="side-icon" id="cpuIcon"></div>
+            <div class="side-name" id="computerChoiceDisplay"></div>
+        </div>
     </div>
+
+    <!-- Result banner -->
+    <div class="result-banner" id="resultBanner">
+        <div class="result-text"  id="resultText"></div>
+        <div class="result-detail" id="resultDetail"></div>
+    </div>
+
+    <!-- Play again -->
+    <button class="reset-btn" id="resetBtn" onclick="resetRound()">🔄 Play Again</button>
+
 </div>
 
 <script>
-function playGame(userChoice) {
+    var scores = { wins: 0, losses: 0, ties: 0 };
+    var icons  = { rock: '🪨', paper: '📄', scissors: '✂️' };
 
-    var computerChoice = Math.random();
+    function playGame(userChoice) {
+        // Computer picks
+        var rand = Math.random();
+        var computerChoice;
+        if      (rand < 0.34)  computerChoice = 'rock';
+        else if (rand <= 0.67) computerChoice = 'paper';
+        else                   computerChoice = 'scissors';
 
-    if (computerChoice < 0.34) {
-        computerChoice = "rock";
-    } else if (computerChoice <= 0.67) {
-        computerChoice = "paper";
-    } else {
-        computerChoice = "scissors";
-    }
+        // Determine result (same logic as original)
+        var result = '';
+        var detail = '';
+        var resultClass = '';
 
-    var result = "";
-    var resultClass = "";
-
-    if (userChoice === computerChoice) {
-        result = "The result is a tie!";
-        resultClass = "tie";
-    }
-    else if (userChoice === "rock") {
-        if (computerChoice === "scissors") {
-            result = "You win! Rock beats Scissors.";
-            resultClass = "winner";
-        } else {
-            result = "You lose! Paper beats Rock.";
-            resultClass = "loser";
+        if (userChoice === computerChoice) {
+            result = "It's a Tie!";
+            detail = 'Great minds think alike.';
+            resultClass = 'tie';
+            scores.ties++;
+        } else if (userChoice === 'rock') {
+            if (computerChoice === 'scissors') {
+                result = 'You Win! 🎉';
+                detail = 'Rock crushes Scissors.';
+                resultClass = 'winner';
+                scores.wins++;
+            } else {
+                result = 'You Lose! 😢';
+                detail = 'Paper covers Rock.';
+                resultClass = 'loser';
+                scores.losses++;
+            }
+        } else if (userChoice === 'paper') {
+            if (computerChoice === 'rock') {
+                result = 'You Win! 🎉';
+                detail = 'Paper covers Rock.';
+                resultClass = 'winner';
+                scores.wins++;
+            } else {
+                result = 'You Lose! 😢';
+                detail = 'Scissors cut Paper.';
+                resultClass = 'loser';
+                scores.losses++;
+            }
+        } else if (userChoice === 'scissors') {
+            if (computerChoice === 'rock') {
+                result = 'You Lose! 😢';
+                detail = 'Rock crushes Scissors.';
+                resultClass = 'loser';
+                scores.losses++;
+            } else {
+                result = 'You Win! 🎉';
+                detail = 'Scissors cut Paper.';
+                resultClass = 'winner';
+                scores.wins++;
+            }
         }
-    }
-    else if (userChoice === "paper") {
-        if (computerChoice === "rock") {
-            result = "You win! Paper beats Rock.";
-            resultClass = "winner";
-        } else {
-            result = "You lose! Scissors beats Paper.";
-            resultClass = "loser";
-        }
-    }
-    else if (userChoice === "scissors") {
-        if (computerChoice === "rock") {
-            result = "You lose! Rock beats Scissors.";
-            resultClass = "loser";
-        } else {
-            result = "You win! Scissors beats Paper.";
-            resultClass = "winner";
-        }
+
+        // Update score display
+        document.getElementById('scoreWins').textContent   = scores.wins;
+        document.getElementById('scoreTies').textContent   = scores.ties;
+        document.getElementById('scoreLosses').textContent = scores.losses;
+
+        // Highlight selected button
+        document.querySelectorAll('.choice-btn').forEach(function(btn) {
+            btn.classList.remove('selected');
+        });
+        document.querySelector('.choice-btn.' + userChoice).classList.add('selected');
+
+        // Show arena
+        document.getElementById('userIcon').textContent            = icons[userChoice];
+        document.getElementById('userChoiceDisplay').textContent   = userChoice;
+        document.getElementById('cpuIcon').textContent             = icons[computerChoice];
+        document.getElementById('computerChoiceDisplay').textContent = computerChoice;
+        document.getElementById('arena').classList.add('visible');
+
+        // Show result banner
+        var banner = document.getElementById('resultBanner');
+        banner.className = 'result-banner visible ' + resultClass;
+        document.getElementById('resultText').textContent   = result;
+        document.getElementById('resultDetail').textContent = detail;
+
+        // Show play again button
+        document.getElementById('resetBtn').classList.add('visible');
     }
 
-    document.getElementById("userChoice").innerText =
-        "Your Choice: " + userChoice;
+    function resetRound() {
+        // Hide arena, banner, reset button
+        document.getElementById('arena').classList.remove('visible');
+        document.getElementById('resultBanner').classList.remove('visible');
+        document.getElementById('resetBtn').classList.remove('visible');
 
-    document.getElementById("computerChoice").innerText =
-        "Computer Choice: " + computerChoice;
-
-    document.getElementById("result").innerText = result;
-    document.getElementById("result").className = resultClass;
-}
+        // Remove selected highlight from buttons
+        document.querySelectorAll('.choice-btn').forEach(function(btn) {
+            btn.classList.remove('selected');
+        });
+    }
 </script>
 
 </body>
